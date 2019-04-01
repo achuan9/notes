@@ -1,0 +1,108 @@
+
+//PC端适配  适用于刚好一屏  px转vw  px 转vh
+// @param {String} px值
+//
+// @example scss - SCSS 用法
+//   .element {
+//     margin: px2vw(10px);
+//   }
+//
+// @example css - CSS 输出
+//   .element {
+//     margin: 5.33333vw;
+//   }
+//
+// @return {String} vw值
+
+@function px2vw($px){
+  @return $px/1920px * 100vw;
+}
+@function px2vh($px){
+  @return $px/1080px * 100vh;
+}
+
+
+// 简写倍率处理 1 到 4 个值，如：margin, padding, position
+//
+// @param {List} $shorthand
+//
+// @example scss - SCSS 用法
+//   .element {
+//     margin: unpack(10px auto, 0.53333333);
+//   }
+//
+// @example css - CSS 输出
+//   .element {
+//     margin: 5.33333px auto;
+//   }
+//
+// @return {List}
+@function unpack($shorthand, $rate) {
+  @if length($shorthand) == 1 {
+      @return rate($shorthand, $rate);
+  } @else if length($shorthand) == 2 {
+      @return rate(nth($shorthand, 1), $rate) rate(nth($shorthand, 2), $rate);
+  } @else if length($shorthand) == 3 {
+      @return rate(nth($shorthand, 1), $rate) rate(nth($shorthand, 2), $rate) rate(nth($shorthand, 3), $rate);
+  } @else {
+      @return rate(nth($shorthand, 1), $rate) rate(nth($shorthand, 2), $rate) rate(nth($shorthand, 3), $rate) rate(nth($shorthand, 4), $rate);
+  }
+}
+//判断属性值是否需要乘以倍率并返回
+//@param {String} $value 单个属性值
+//@param {String} $value 单个属性值
+//@return {String} 处理后的属性值
+ 
+@function rate($value, $rate) {
+    @if type-of(index(auto inherit initial 0, $value)) == 'number' {
+      @return $value;
+    } @else {
+      @return $value * $rate;
+    }
+}
+
+
+//pc端各种尺寸适配
+//@example 
+//.element {
+//   @include media((
+//     width: 100px,
+//     height: 100px,
+//     margin: 0 10px,
+//   ))
+// }
+
+@mixin media($props) {
+  
+    @media screen and (min-width: 1024px) {
+      @each $property, $value in $props {
+          #{$property}: unpack($value, 0.53333333);
+      }
+    }
+    @media screen and (min-width: 1366px) {
+      @each $property, $value in $props {
+        #{$property}: unpack($value, 0.71145833);
+      }
+    }
+    @media screen and (min-width: 1280px) {
+      @each $property, $value in $props {
+        #{$property}: unpack($value, 0.66666667);
+      }
+    }
+    @media screen and (min-width: 1440px) {
+      @each $property, $value in $props {
+        #{$property}: unpack($value, 0.75);
+      }
+     }
+    @media screen and (min-width: 1600px) {
+      @each $property, $value in $props {
+        #{$property}: unpack($value, 0.83333333);
+      }
+    }
+    @media screen and (min-width: 1920px) {
+      @each $property, $value in $props {
+        #{$property}: $value;
+      }
+    }
+}
+
