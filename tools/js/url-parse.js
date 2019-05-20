@@ -1,20 +1,20 @@
 /**
  * 解析url参数
- * @example ?id=123&s=1
+ * @example id=123&s=1
  * @return Object {id:123,s:1}
  */
-export default (target = 'search') => {
-  let url = window.location[target];
-  let obj = {};
-  let reg = /[?&][^?&]+=[^?&]+/g;
-  let arr = url.match(reg);
-  if (arr) {
-      arr.forEach((item) => {
-          let tempArr = item.substring(1).split('=');
-          let key = decodeURIComponent(tempArr[0]);
-          let val = decodeURIComponent(tempArr[1]);
-          obj[key] = val;
-      });
+
+export default function (url) {
+  const search = url.split('?')[1]
+  if (!search) {
+    return {}
   }
-  return obj;
-}
+  return JSON.parse(
+    '{"' +
+      decodeURIComponent(search)
+        .replace(/"/g, '\\"')
+        .replace(/&/g, '","')
+        .replace(/=/g, '":"') +
+      '"}'
+  )
+};
