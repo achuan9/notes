@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cesium App</title>
+  <style>
+    html,
+    body,
+    #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/libs/cesium/Source/Widgets/widgets.css">
+</head>
+
+<body>
+  <div id="cesiumContainer"></div>
+  <script src="./assets/libs/cesium/Build/CesiumUnminified/Cesium.js"></script>
+  <script>
+    const center = { lng: 114.06185645, lat: 22.53170943 }
+    const startPoint = Cesium.Cartesian3.fromDegrees(center.lng, center.lat, 0);
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      shouldAnimate: true,
+    })
+    const entity = viewer.entities.add({
+      position: startPoint,
+      point: {
+        show: true,
+        pixelSize: 10,
+        outlineColor: Cesium.Color.RED,
+        outlineWidth: 2
+      },
+      // orientation: new Cesium.VelocityOrientationProperty(sampledPosition)
+    });
+    viewer.zoomTo(entity)
+
+  </script>
+
+  <script type="module">
+    entity.position = new Cesium.CallbackProperty(function (time, result) {
+      
+    })
+  </script>
+
+  <!-- <script type="module">
+    const center = { lng: 114.06185645, lat: 22.53170943 }
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      shouldAnimate: true,
+    })
+    const startPoint = Cesium.Cartesian3.fromDegrees(center.lng, center.lat, 0);
+    const endPoint = Cesium.Cartesian3.fromDegrees(center.lng + 0.002, center.lat, 0);
+    
+
+    const entity = viewer.entities.add({
+      position: startPoint,
+      point: {
+        show: true,
+        pixelSize: 10,
+        outlineColor: Cesium.Color.RED,
+        outlineWidth: 2
+      },
+      // orientation: new Cesium.VelocityOrientationProperty(sampledPosition)
+    });
+    viewer.zoomTo(entity)
+    const d = dynamicEntity(viewer, entity)
+    d.update(startPoint)
+    // setInterval(() => {
+    //   center.lng += 0.00001
+    //   d.update(Cesium.Cartesian3.fromDegrees(center.lng, center.lat, 0))
+    // }, 1000);
+    // setTimeout(() => {
+      
+    // }, 8000);
+
+    function dynamicEntity(viewer, entity) {
+      let preTime = null;
+      const sampledPosition = new Cesium.SampledPositionProperty();
+      return {
+        update(pos) {
+          if (!preTime) { // 第一次
+            preTime = Cesium.JulianDate.now();
+            sampledPosition.addSample(preTime, pos)
+            return entity.position = pos;
+          }
+          if (entity.position.isConstant) {
+            entity.position = sampledPosition;
+            viewer.clock.currentTime = preTime.clone();
+          }
+          const now = Cesium.JulianDate.now();
+          sampledPosition.addSample(now, pos)
+          preTime = now
+        }
+      }
+    }
+  </script> -->
+
+
+</body>
+
+</html>
